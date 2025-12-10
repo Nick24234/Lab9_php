@@ -1,0 +1,62 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+  <h2><%= t('transfers.title') %></h2>
+  <% if user_signed_in? %>
+    <%= link_to t('transfers.create_new'), new_transfer_path, class: 'btn btn-primary' %>
+  <% else %>
+    <%= link_to t('transfers.login_to_create'), new_user_session_path, class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<% if @transfers.any? %>
+  <div class="posts-list">
+    <% @transfers.each do |transfer| %>
+      <div class="post-card">
+        <h3><%= t('transfers.transfer_number', id: transfer.id) %></h3>
+        <div class="post-meta">
+          <strong><%= t('transfers.sender') %>:</strong> <%= transfer.sender.nickname %> | 
+          <strong><%= t('transfers.receiver') %>:</strong> <%= transfer.receiver.nickname %> | 
+          <strong><%= t('transfers.amount') %>:</strong> <%= number_to_currency(transfer.amount, unit: "₴", separator: ",", delimiter: " ") %>
+        </div>
+        <div class="post-meta" style="margin-top: 10px;">
+          <strong><%= t('transfers.status') %>:</strong> 
+          <span style="padding: 4px 12px; border-radius: 4px; font-weight: bold; 
+            <% if transfer.completed? %>
+              background: #d4edda; color: #155724;
+            <% elsif transfer.cancelled? %>
+              background: #f8d7da; color: #721c24;
+            <% else %>
+              background: #fff3cd; color: #856404;
+            <% end %>">
+            <% if transfer.completed? %>
+              <%= t('transfers.status_completed') %>
+            <% elsif transfer.cancelled? %>
+              <%= t('transfers.status_cancelled') %>
+            <% else %>
+              <%= t('transfers.status_pending') %>
+            <% end %>
+          </span>
+          | <strong><%= t('transfers.created_at') %>:</strong> <%= transfer.created_at.strftime("%d.%m.%Y о %H:%M") %>
+        </div>
+        <div class="post-actions">
+          <%= link_to t('transfers.view'), transfer, class: 'btn btn-primary' %>
+          <%= link_to t('transfers.edit'), edit_transfer_path(transfer), class: 'btn btn-secondary' %>
+          <%= button_to t('transfers.delete'), transfer, method: :delete, 
+              data: { confirm: t('transfers.delete_confirm') }, 
+              class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <h2><%= t('transfers.no_transfers') %></h2>
+    <% if user_signed_in? %>
+      <p><%= t('transfers.create_first') %></p>
+      <%= link_to t('transfers.create'), new_transfer_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+    <% else %>
+      <p><%= t('transfers.login_to_view') %></p>
+      <%= link_to t('menu.login'), new_user_session_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+      <%= link_to t('menu.registration'), new_user_registration_path, class: 'btn btn-secondary', style: 'margin-top: 20px;' %>
+    <% end %>
+  </div>
+<% end %>

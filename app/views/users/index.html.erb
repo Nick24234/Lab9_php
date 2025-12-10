@@ -1,0 +1,30 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+  <h2><%= t('users.title') %></h2>
+  <%= link_to t('users.create_new'), new_user_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @users.any? %>
+  <div class="posts-list">
+    <% @users.each do |user| %>
+      <div class="post-card">
+        <h3>👤 <%= user.nickname %></h3>
+        <div class="post-meta">
+          <strong><%= t('users.balance') %>:</strong> <%= number_to_currency(user.balance, unit: "₴", separator: ",", delimiter: " ") %> | 
+          <strong><%= t('users.created_at') %>:</strong> <%= user.created_at.strftime("%d.%m.%Y о %H:%M") %>
+        </div>
+        <div class="post-actions">
+          <%= link_to t('users.view'), user, class: 'btn btn-primary' %>
+          <% if user_signed_in? && current_user.id == user.id %>
+            <%= link_to t('users.edit'), edit_user_path(user), class: 'btn btn-secondary' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <h2><%= t('users.no_users') %></h2>
+    <p><%= t('users.create_first') %></p>
+    <%= link_to t('users.create_new'), new_user_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+  </div>
+<% end %>

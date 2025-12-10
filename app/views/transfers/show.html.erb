@@ -1,0 +1,68 @@
+<div class="post-card" style="border-left: none;">
+  <h2 style="color: #667eea; margin-bottom: 15px;"><%= t('transfers.transfer_number', id: @transfer.id) %></h2>
+  
+  <div class="post-meta" style="margin-bottom: 25px;">
+    <strong><%= t('transfers.sender') %>:</strong> <%= @transfer.sender.nickname %> (<%= t('transfers.balance') %>: <%= number_to_currency(@transfer.sender.balance, unit: "₴", separator: ",", delimiter: " ") %>)<br>
+    <strong><%= t('transfers.receiver') %>:</strong> <%= @transfer.receiver.nickname %> (<%= t('transfers.balance') %>: <%= number_to_currency(@transfer.receiver.balance, unit: "₴", separator: ",", delimiter: " ") %>)<br>
+    <strong><%= t('transfers.amount') %>:</strong> <%= number_to_currency(@transfer.amount, unit: "₴", separator: ",", delimiter: " ") %><br>
+    <strong><%= t('transfers.status') %>:</strong> 
+    <span style="padding: 6px 16px; border-radius: 6px; font-weight: bold; font-size: 1.1em;
+      <% if @transfer.completed? %>
+        background: #d4edda; color: #155724;
+      <% elsif @transfer.cancelled? %>
+        background: #f8d7da; color: #721c24;
+      <% else %>
+        background: #fff3cd; color: #856404;
+      <% end %>">
+      <% if @transfer.completed? %>
+        <%= t('transfers.status_completed_full') %>
+      <% elsif @transfer.cancelled? %>
+        <%= t('transfers.status_cancelled') %>
+      <% else %>
+        <%= t('transfers.status_pending') %>
+      <% end %>
+    </span><br>
+    <strong><%= t('transfers.created_at') %>:</strong> <%= @transfer.created_at.strftime("%d.%m.%Y о %H:%M") %><br>
+    <% if @transfer.updated_at != @transfer.created_at %>
+      <strong><%= t('transfers.updated_at') %>:</strong> <%= @transfer.updated_at.strftime("%d.%m.%Y о %H:%M") %>
+    <% end %>
+  </div>
+  
+  <% if @transfer.pending? && user_signed_in? && current_user.id == @transfer.receiver_id %>
+    <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <h3 style="margin-bottom: 15px; color: #1976D2;"><%= t('transfers.confirm_receipt') %></h3>
+      <p style="margin-bottom: 15px;"><%= t('transfers.confirm_receipt_text') %></p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <%= button_to t('transfers.confirm_receipt_button'), complete_transfer_path(@transfer), 
+            method: :patch, 
+            class: 'btn btn-primary',
+            form: { style: 'display: inline;' },
+            data: { confirm: t('transfers.confirm_receipt_confirm') } %>
+      </div>
+    </div>
+  <% elsif @transfer.pending? && user_signed_in? && current_user.id == @transfer.sender_id %>
+    <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+      <h3 style="margin-bottom: 15px; color: #856404;"><%= t('transfers.cancel_transfer_title') %></h3>
+      <p style="margin-bottom: 15px;"><%= t('transfers.cancel_transfer_text') %></p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <%= button_to t('transfers.cancel_transfer_button'), cancel_transfer_path(@transfer), 
+            method: :patch, 
+            class: 'btn btn-danger',
+            form: { style: 'display: inline;' },
+            data: { confirm: t('transfers.cancel_transfer_confirm') } %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="form-actions">
+  <% if user_signed_in? && (current_user.id == @transfer.sender_id || current_user.id == @transfer.receiver_id) %>
+    <%= link_to t('transfers.edit'), edit_transfer_path(@transfer), class: 'btn btn-secondary' %>
+  <% end %>
+  <%= link_to t('transfers.back_to_list'), transfers_path, class: 'btn btn-primary' %>
+  <% if user_signed_in? && current_user.id == @transfer.sender_id %>
+    <%= button_to t('transfers.delete'), @transfer, method: :delete, 
+        data: { confirm: t('transfers.delete_confirm_detailed') }, 
+        class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+  <% end %>
+</div>

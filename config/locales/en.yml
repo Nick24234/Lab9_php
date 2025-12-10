@@ -1,0 +1,103 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default YAML parser.
+#
+# Examples:
+#   name: "Joe"
+#   email: "Joe@example.com"
+#
+# To learn more, please read the Rails Internationalization guide
+# available at https://guides.rubyonrails.org/i18n.html
+
+en:
+  menu:
+    home: "Home"
+    login: "Login"
+    registration: "Registration"
+    transfers: "Transfers"
+    all_transfers: "All Transfers"
+    new_transfer: "New Transfer"
+    dashboard: "Dashboard"
+    all_users: "All Users"
+    logout: "Log out"
+    landing_page: "Landing page"
+  hello: "Hello world"
+  
+  transfers:
+    title: "All Transfers"
+    new_title: "Create New Transfer"
+    show_title: "Transfer"
+    edit_title: "Edit Transfer"
+    sender: "Sender"
+    receiver: "Receiver"
+    amount: "Amount"
+    status: "Status"
+    created_at: "Created"
+    updated_at: "Updated"
+    balance: "Balance"
+    transfer_number: "Transfer #%{id}"
+    create_new: "Create New Transfer"
+    login_to_create: "Login to Create Transfer"
+    view: "View"
+    edit: "Edit"
+    delete: "Delete"
+    back_to_list: "Back to List"
+    cancel: "Cancel"
+    create: "Create Transfer"
+    update: "Update Transfer"
+    no_transfers: "No transfers yet"
+    create_first: "Create your first transfer to start working with the system!"
+    login_to_view: "Please log in to view and create transfers."
+    login_link: "log in"
+    create_account_link: "create an account"
+    please_login: "Please %{login} or %{create_account} to create transfers."
+    select_receiver: "Select Receiver"
+    receiver_hint: "Select the user you want to transfer money to"
+    amount_label: "Transfer Amount"
+    amount_placeholder: "Enter amount"
+    max_amount: "Maximum amount: %{amount}"
+    status_label: "Transfer Status"
+    confirm_receipt: "Transfer Confirmation"
+    confirm_receipt_text: "If the funds have already arrived, click the \"Confirm Receipt\" button below."
+    confirm_receipt_button: "✅ Confirm Receipt"
+    confirm_receipt_confirm: "Are you sure the funds have already been received?"
+    cancel_transfer_title: "Cancel Transfer"
+    cancel_transfer_text: "You can cancel the transfer if it has not been confirmed yet. Funds will be returned to your balance."
+    cancel_transfer_button: "❌ Cancel Transfer"
+    cancel_transfer_confirm: "Are you sure you want to cancel this transfer? Funds will be returned to your balance."
+    delete_confirm: "Are you sure?"
+    delete_confirm_detailed: "Are you sure you want to delete this transfer?"
+    status_pending: "⏳ Pending Confirmation"
+    status_completed: "✅ Completed"
+    status_completed_full: "✅ Completed - Funds successfully transferred!"
+    status_cancelled: "❌ Cancelled"
+    errors_found: "Found %{count} error:"
+    errors_found_plural: "Found %{count} errors:"
+    
+  users:
+    title: "All Users"
+    create_new: "Create New Account"
+    view: "View"
+    edit: "Edit"
+    no_users: "No users yet"
+    create_first: "Create the first account to start working with the system!"
+    balance: "💰 Balance"
+    created_at: "Created"
+

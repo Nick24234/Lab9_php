@@ -1,0 +1,11 @@
+<h2><%= t('transfers.new_title') %></h2>
+
+<% unless user_signed_in? %>
+  <div class="alert">
+    <%= t('transfers.please_login', login: link_to(t('transfers.login_link'), new_user_session_path), create_account: link_to(t('transfers.create_account_link'), new_user_registration_path)).html_safe %>
+  </div>
+<% else %>
+  <%= render 'form', transfer: @transfer %>
+<% end %>
+
+<%= link_to t('transfers.back_to_list'), transfers_path, class: 'back-link' %>

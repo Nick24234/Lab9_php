@@ -1,0 +1,6 @@
+<h2><%= t('transfers.edit_title') %></h2>
+
+<%= render 'form', transfer: @transfer %>
+
+<%= link_to t('transfers.view'), @transfer, class: 'back-link' %> |
+<%= link_to t('transfers.back_to_list'), transfers_path, class: 'back-link' %>

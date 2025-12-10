@@ -1,0 +1,89 @@
+<%= form_with(model: transfer, local: true) do |form| %>
+  <% if transfer.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading"><%= transfer.errors.count == 1 ? t('transfers.errors_found', count: transfer.errors.count) : t('transfers.errors_found_plural', count: transfer.errors.count) %></h4>
+      <ul class="mb-0" style="margin-top: 10px; padding-left: 20px;">
+        <% transfer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if transfer.new_record? && user_signed_in? %>
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <strong>👤 <%= t('transfers.sender') %>:</strong> <%= current_user.nickname %>
+      <br>
+      <strong>💰 <%= t('transfers.balance') %>:</strong> <%= number_to_currency(current_user.balance, unit: "₴", separator: ",", delimiter: " ") %>
+    </div>
+  <% elsif !transfer.new_record? && transfer.sender && transfer.receiver %>
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <strong>👤 <%= t('transfers.sender') %>:</strong> <%= transfer.sender.nickname %>
+      <br>
+      <strong>👤 <%= t('transfers.receiver') %>:</strong> <%= transfer.receiver.nickname %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :receiver_id, t('transfers.receiver') %>
+    <% if transfer.new_record? && user_signed_in? %>
+      <%= form.collection_select :receiver_id, 
+          User.where.not(id: current_user.id).order(:nickname), 
+          :id, 
+          lambda { |u| "#{u.nickname} (#{t('transfers.balance')}: #{number_to_currency(u.balance, unit: '₴', separator: ',', delimiter: ' ')})" },
+          { prompt: t('transfers.select_receiver') },
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;', required: true } %>
+    <% elsif !transfer.new_record? %>
+      <%= form.collection_select :receiver_id, 
+          User.all.order(:nickname), 
+          :id, 
+          lambda { |u| "#{u.nickname} (#{t('transfers.balance')}: #{number_to_currency(u.balance, unit: '₴', separator: ',', delimiter: ' ')})" },
+          {},
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;', required: true } %>
+    <% end %>
+    <% if transfer.errors[:receiver_id].any? %>
+      <div class="error-message"><%= transfer.errors[:receiver_id].first %></div>
+    <% end %>
+    <small style="color: #6c757d; display: block; margin-top: 5px;">
+      <%= t('transfers.receiver_hint') %>
+    </small>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :amount, t('transfers.amount_label') %>
+    <% if transfer.new_record? && user_signed_in? %>
+      <%= form.number_field :amount, step: 0.01, placeholder: t('transfers.amount_placeholder'), min: 0.01, max: current_user.balance, required: true %>
+      <small style="color: #6c757d; display: block; margin-top: 5px;">
+        <%= t('transfers.max_amount', amount: number_to_currency(current_user.balance, unit: "₴", separator: ",", delimiter: " ")) %>
+      </small>
+    <% else %>
+      <%= form.number_field :amount, step: 0.01, placeholder: t('transfers.amount_placeholder'), min: 0.01, required: true %>
+    <% end %>
+    <% if transfer.errors[:amount].any? %>
+      <div class="error-message"><%= transfer.errors[:amount].first %></div>
+    <% end %>
+  </div>
+
+  <% unless transfer.new_record? %>
+    <div class="form-group">
+      <%= form.label :status, t('transfers.status_label') %>
+      <%= form.select :status, 
+          options_for_select([
+            [t('transfers.status_pending'), 'pending'],
+            [t('transfers.status_completed'), 'completed'],
+            [t('transfers.status_cancelled'), 'cancelled']
+          ], transfer.status),
+          {},
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;' } %>
+    </div>
+  <% end %>
+
+  <div class="form-actions">
+    <% if user_signed_in? %>
+      <%= form.submit transfer.new_record? ? t('transfers.create') : t('transfers.update'), class: 'btn btn-success' %>
+    <% end %>
+    <%= link_to t('transfers.cancel'), transfers_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+
